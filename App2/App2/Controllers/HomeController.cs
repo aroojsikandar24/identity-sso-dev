@@ -50,38 +50,24 @@ public class HomeController : Controller
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
 
-        var logoutUrl = $"{disco.EndSessionEndpoint}?id_token_hint={idToken}&post_logout_redirect_uri=https://localhost:5002/signout-callback-oidc";
+        var logoutUrl = $"{disco.EndSessionEndpoint}?id_token_hint={idToken}&post_logout_redirect_uri=https://localhost:5002";
 
         return Redirect(logoutUrl);
     }
 
-    public IActionResult SignoutCallback()
-    {
-        return RedirectToAction("Index", "Home");
-    }
-
     public IActionResult Login()
     {
+        var returnUrl = "https://localhost:5002";
+        var redirectUrl = Url.Action("Login", "Account", new { returnUrl });
         return Challenge(new AuthenticationProperties { RedirectUri = "https://localhost:5002" }, OpenIdConnectDefaults.AuthenticationScheme);
     }
 
     public IActionResult Register()
     {
-        var returnUrl = Url.Action("Index", "Home");
+        var returnUrl = "https://localhost:5002";
         var redirectUrl = $"https://localhost:5000/Account/Register?returnUrl={returnUrl}";
         return Redirect(redirectUrl);
     }
-
-    public IActionResult SilentSignIn()
-    {
-        return View();
-    }
-
-    public IActionResult SilentSignOut()
-    {
-        return View();
-    }
-
 }
 
 public class LogoutRequest

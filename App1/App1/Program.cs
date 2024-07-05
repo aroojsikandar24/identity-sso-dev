@@ -29,15 +29,6 @@ builder.Services.AddAuthentication(options =>
         NameClaimType = "name",
         RoleClaimType = "role"
     };
-    options.Events = new OpenIdConnectEvents
-    {
-        OnRedirectToIdentityProviderForSignOut = async context =>
-        {
-            var idToken = await context.HttpContext.GetTokenAsync("id_token");
-            context.ProtocolMessage.IdTokenHint = idToken;
-            context.ProtocolMessage.PostLogoutRedirectUri = "https://localhost:5001/signout-callback-oidc";
-        }
-    };
 });
 
 builder.Services.AddControllersWithViews();
@@ -61,10 +52,6 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}");
-    endpoints.MapControllerRoute(
-        name: "signout-callback-oidc",
-        pattern: "signout-callback-oidc",
-        defaults: new { controller = "Account", action = "SignoutCallback" });
 });
 
 app.Run();

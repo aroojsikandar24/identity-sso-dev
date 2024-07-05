@@ -11,13 +11,8 @@ public static class Config
                 ClientId = "app1",
                 ClientSecrets = { new Secret("app1-secret".Sha256()) },
                 AllowedGrantTypes = GrantTypes.Code,
-/*                RedirectUris = { "https://localhost:5001/signin-oidc" },
-*/                RedirectUris =
-                {
-                    "https://localhost:5001/signin-oidc",
-                    "https://localhost:5001/silent-check-sso.html"
-                },
-                PostLogoutRedirectUris = { "https://localhost:5001/signout-callback-oidc" },
+                RedirectUris = { "https://localhost:5001/signin-oidc" },
+                PostLogoutRedirectUris = { "https://localhost:5001"},
                 AllowedScopes = { "openid", "profile", "api1" },
                 RequirePkce = true,
                 AllowOfflineAccess = true,
@@ -28,13 +23,8 @@ public static class Config
                 ClientId = "app2",
                 ClientSecrets = { new Secret("app2-secret".Sha256()) },
                 AllowedGrantTypes = GrantTypes.Code,
-/*                RedirectUris = { "https://localhost:5002/signin-oidc" },
-*/                RedirectUris =
-                {
-                    "https://localhost:5002/signin-oidc",
-                    "https://localhost:5002/silent-check-sso.html"
-                },
-                PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
+                RedirectUris = { "https://localhost:5002/signin-oidc" },
+                PostLogoutRedirectUris = { "https://localhost:5002" },
                 AllowedScopes = { "openid", "profile", "api1" },
                 RequirePkce = true,
                 AllowOfflineAccess = true,
