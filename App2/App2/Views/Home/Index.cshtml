@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="text-center">
+    @if (User.Identity.IsAuthenticated)
+    {
+        <p>Welcome, @User.Identity.Name!</p>
+        <button onclick="location.href='/Home/Logout'">Logout</button>
+        <button onclick="location.href='/Home/GetUserInfo'">Get User Info</button>
+    }
+    else
+    {
+        <button onclick="location.href='/Home/Register'">Register</button>
+        <button onclick="location.href='/Home/Login'">Login</button>
+    }
+</div>
