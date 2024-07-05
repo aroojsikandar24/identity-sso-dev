@@ -62,7 +62,7 @@ public class HomeController : Controller
 
     public IActionResult Login()
     {
-        return Challenge(new AuthenticationProperties { RedirectUri = "https://localhost:5002" }, OpenIdConnectDefaults.AuthenticationScheme);
+        return Challenge(new AuthenticationProperties { RedirectUri = "https://localhost:5002/Home/Dashboard" }, OpenIdConnectDefaults.AuthenticationScheme);
     }
 
     public IActionResult Register()
@@ -73,6 +73,11 @@ public class HomeController : Controller
     }
 
     public IActionResult SilentSignIn()
+    {
+        return View();
+    }
+    
+    public IActionResult Dashboard()
     {
         return View();
     }

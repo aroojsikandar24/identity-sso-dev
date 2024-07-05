@@ -15,19 +15,22 @@
 
     <script>
         function silentSignIn() {
-            var iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.src = 'https://localhost:5000/connect/authorize?client_id=@ViewData["ClientId"]&redirect_uri=https://localhost:@ViewData["Port"]/silent-check-sso.html&response_type=id_token token&scope=openid profile api1&prompt=none';
-            document.body.appendChild(iframe);
 
-            window.addEventListener('message', function (event) {
-                if (event.origin === 'https://localhost:5000') {
-                    document.body.removeChild(iframe);
-                    if (event.data && event.data.startsWith('https://localhost:@ViewData["Port"]/silent-check-sso.html')) {
+            var isUserLoggedIn = '@User.Identity.IsAuthenticated';
+            if (isUserLoggedIn == 'False') {
+                var iframe = document.createElement('iframe');
+                iframe.id = 'silent-login-frame';
+                iframe.style.display = "none";
+                iframe.src = 'https://localhost:5002/Home/Login';
+
+                iframe.onload = function () {
+                    debugger
+                    if (iframe.contentWindow.location.href !== undefined && iframe.contentWindow.location.href == "https://localhost:5002/Home/Dashboard") {
                         location.reload();
                     }
-                }
-            });
+                };
+                document.body.appendChild(iframe);
+            }
         }
 
         function silentSignOut() {
@@ -46,8 +49,13 @@
             });
         }
 
-        setInterval(silentSignIn, 5000);
-        setInterval(silentSignOut, 5000);
+        document.addEventListener('DOMContentLoaded', function () {
+            debugger;
+            silentSignIn();
+        });
+
+        // setInterval(silentSignIn, 5000);
+        // setInterval(silentSignOut, 5000);
     </script>
 
     @RenderSection("Scripts", required: false)
