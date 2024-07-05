@@ -1,0 +1,11 @@
+﻿@{
+    Layout = "_Layout";
+    if (ViewData["ClientId"] == null)
+    {
+        ViewData["ClientId"] = "app1";
+    }
+    if (ViewData["Port"] == null)
+    {
+        ViewData["Port"] = "5001"; 
+    }
+}

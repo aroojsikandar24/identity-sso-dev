@@ -1,0 +1,25 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+
+        @* <form asp-controller="Home" asp-action="Logout" method="post" style="display:inline;">
+            <button type="submit">Logout</button>
+        </form> 
+        <button onclick="location.href='@Url.Action("Logout", "Home")'">Logout</button> *@
+
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <p>Welcome, @User.Identity.Name!</p>
+        <button onclick="location.href='/Home/Logout'">Logout</button>
+        <button onclick="location.href='/Home/GetUserInfo'">Get User Info</button>
+    }
+    else
+    {
+        <button onclick="location.href='/Home/Register'">Register</button>
+        <button onclick="location.href='/Home/Login'">Login</button>
+    }
+
+</div>
