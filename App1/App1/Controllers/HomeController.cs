@@ -1,17 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
 
 public class HomeController : Controller
 {
     private readonly IHttpClientFactory _httpClientFactory;
+    private readonly IConfiguration _configuration;
 
-    public HomeController(IHttpClientFactory httpClientFactory)
+    public HomeController(IHttpClientFactory httpClientFactory, IConfiguration configuration)
     {
         _httpClientFactory = httpClientFactory;
+        _configuration = configuration;
     }
 
     public IActionResult Index()
@@ -24,20 +26,24 @@ public class HomeController : Controller
     }
 
     [Authorize]
-    public IActionResult GetUserInfo()
+    public IActionResult Login()
     {
-        var userInfo = new
-        {
-            User.Identity.Name,
-            Claims = User.Claims.Select(c => new { c.Type, c.Value })
-        };
-        return Json(userInfo);
+        var properties = new AuthenticationProperties { RedirectUri = $"{_configuration["ApplicationUrl"]}/Dashboard" };
+        return Challenge(properties, OpenIdConnectDefaults.AuthenticationScheme);
     }
 
+    public IActionResult Register()
+    {
+        var returnUrl = _configuration["ApplicationUrl"];
+        var redirectUrl = $"{_configuration["IdentityServerApplicationUrl"]}/Account/Register?returnUrl={returnUrl}";
+        return Redirect(redirectUrl);
+    }
+
+    [Authorize]
     public async Task<IActionResult> Logout()
     {
         var client = new HttpClient();
-        var disco = await client.GetDiscoveryDocumentAsync("https://localhost:5000");
+        var disco = await client.GetDiscoveryDocumentAsync(_configuration["IdentityServerApplicationUrl"]);
         if (disco.IsError)
         {
             throw new System.Exception($"Error getting discovery document: {disco.Error}");
@@ -48,24 +54,11 @@ public class HomeController : Controller
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
 
-        var logoutUrl = $"{disco.EndSessionEndpoint}?id_token_hint={idToken}&post_logout_redirect_uri=https://localhost:5001";
+        var logoutUrl = $"{disco.EndSessionEndpoint}?id_token_hint={idToken}&post_logout_redirect_uri={_configuration["ApplicationUrl"]}";
 
         return Redirect(logoutUrl);
     }
-    public IActionResult Login(string returnUrl = "https://localhost:5001")
-    {
-        var properties = new AuthenticationProperties { RedirectUri = returnUrl };
-        return Challenge(properties, OpenIdConnectDefaults.AuthenticationScheme);
-    }
-    public IActionResult Register()
-    {
-        var returnUrl = "https://localhost:5001"; 
-        var redirectUrl = $"https://localhost:5000/Account/Register?returnUrl={returnUrl}";
-        return Redirect(redirectUrl);
-    }
-
 }
-
 
 public class LogoutRequest
 {

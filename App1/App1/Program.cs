@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
+var _configuration = builder.Configuration;
 
 builder.Services.AddHttpClient();
 
@@ -15,9 +16,9 @@ builder.Services.AddAuthentication(options =>
 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
 .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
 {
-    options.Authority = "https://localhost:5000";
-    options.ClientId = "app1";
-    options.ClientSecret = "app1-secret";
+    options.Authority = _configuration["IdentityServerApplicationUrl"];
+    options.ClientId = _configuration["Authentication:ClientId"];
+    options.ClientSecret = _configuration["Authentication:ClientSecret"];
     options.ResponseType = "code";
     options.SaveTokens = true;
     options.Scope.Add("openid");
@@ -52,6 +53,11 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}");
+
+    endpoints.MapControllerRoute(
+        name: "dashboard",
+        pattern: "dashboard",
+        defaults: new { controller = "Dashboard", action = "Index" });
 });
 
 app.Run();

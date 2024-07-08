@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
+var _configuration = builder.Configuration;
 
 builder.Services.AddHttpClient();
 
@@ -15,9 +16,9 @@ builder.Services.AddAuthentication(options =>
 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
 .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
 {
-    options.Authority = "https://localhost:5000";
-    options.ClientId = "app2";
-    options.ClientSecret = "app2-secret";
+    options.Authority = _configuration["IdentityServerApplicationUrl"];
+    options.ClientId = _configuration["Authentication:ClientId"];
+    options.ClientSecret = _configuration["Authentication:ClientSecret"];
     options.ResponseType = "code";
     options.SaveTokens = true;
     options.Scope.Add("openid");
@@ -28,15 +29,6 @@ builder.Services.AddAuthentication(options =>
     {
         NameClaimType = "name",
         RoleClaimType = "role"
-    };
-    options.Events = new OpenIdConnectEvents
-    {
-        OnRedirectToIdentityProviderForSignOut = async context =>
-        {
-            var idToken = await context.HttpContext.GetTokenAsync("id_token");
-            context.ProtocolMessage.IdTokenHint = idToken;
-            context.ProtocolMessage.PostLogoutRedirectUri = "https://localhost:5002/signout-callback-oidc";
-        }
     };
 });
 
@@ -61,10 +53,11 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}");
+
     endpoints.MapControllerRoute(
-        name: "signout-callback-oidc",
-        pattern: "signout-callback-oidc",
-        defaults: new { controller = "Account", action = "SignoutCallback" });
+        name: "dashboard",
+        pattern: "dashboard",
+        defaults: new { controller = "Dashboard", action = "Index" });
 });
 
 app.Run();

@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Lenovo\\identity-sso-dev\\App2\\App2\\App2.csproj": {}
+    "D:\\Work\\identity-sso-dev\\App2\\App2\\App2.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Lenovo\\identity-sso-dev\\App2\\App2\\App2.csproj": {
+    "D:\\Work\\identity-sso-dev\\App2\\App2\\App2.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Lenovo\\identity-sso-dev\\App2\\App2\\App2.csproj",
+        "projectUniqueName": "D:\\Work\\identity-sso-dev\\App2\\App2\\App2.csproj",
         "projectName": "App2",
-        "projectPath": "C:\\Users\\Lenovo\\identity-sso-dev\\App2\\App2\\App2.csproj",
-        "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Lenovo\\identity-sso-dev\\App2\\App2\\obj\\",
+        "projectPath": "D:\\Work\\identity-sso-dev\\App2\\App2\\App2.csproj",
+        "packagesPath": "C:\\Users\\WB\\.nuget\\packages\\",
+        "outputPath": "D:\\Work\\identity-sso-dev\\App2\\App2\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\WB\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,8 +22,8 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {},
+          "https://nuget.telerik.com/v3/index.json": {}
         },
         "frameworks": {
           "net6.0": {
@@ -86,7 +86,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202\\RuntimeIdentifierGraph.json"
         }
       }
     }

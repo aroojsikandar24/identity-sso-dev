@@ -1,9 +1,0 @@
-﻿@{
-    ViewData["Title"] = "User Info";
-}
-
-<div class="text-center">
-    <h1>User Info Page</h1>
-    <p>Welcome, @User.Identity.Name!</p>
-    <p>Email: @User.FindFirst("email")?.Value</p>
-</div>

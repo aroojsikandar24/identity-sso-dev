@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="~/css/site.css" />
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script src="~/js/site.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 </head>
 <body>
     <div class="container">
@@ -15,19 +16,22 @@
 
     <script>
         function silentSignIn() {
-            var iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.src = 'https://localhost:5000/connect/authorize?client_id=@ViewData["ClientId"]&redirect_uri=https://localhost:@ViewData["Port"]/silent-check-sso.html&response_type=id_token token&scope=openid profile api1&prompt=none';
-            document.body.appendChild(iframe);
 
-            window.addEventListener('message', function (event) {
-                if (event.origin === 'https://localhost:5000') {
-                    document.body.removeChild(iframe);
-                    if (event.data && event.data.startsWith('https://localhost:@ViewData["Port"]/silent-check-sso.html')) {
+            var isUserLoggedIn = '@User.Identity.IsAuthenticated';
+            if (isUserLoggedIn == 'False') {
+                var iframe = document.createElement('iframe');
+                iframe.id = 'silent-login-frame';
+                iframe.style.display = "none";
+                iframe.src = 'https://localhost:5001/Home/Login';
+
+                iframe.onload = function () {
+                    debugger
+                    if (iframe.contentWindow.location.href !== undefined && iframe.contentWindow.location.href == "https://localhost:5001/Dashboard") {
                         location.reload();
                     }
-                }
-            });
+                };
+                document.body.appendChild(iframe);
+            }
         }
 
         function silentSignOut() {
@@ -46,8 +50,13 @@
             });
         }
 
-        setInterval(silentSignIn, 5000);
-        setInterval(silentSignOut, 5000);
+        document.addEventListener('DOMContentLoaded', function () {
+            debugger;
+            silentSignIn();
+        });
+
+        // setInterval(silentSignIn, 5000);
+        // setInterval(silentSignOut, 5000);
     </script>
 
     @RenderSection("Scripts", required: false)

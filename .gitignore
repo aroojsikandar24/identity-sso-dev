@@ -1,5 +1,59 @@
-# pack-refs with: peeled fully-peeled sorted 
-24369cdc2b8d3d8dee4706ddc4618afce826d510 refs/remotes/origin/main
+# Ignore the bin and obj directories
+bin/
+obj/
 
+# Ignore Visual Studio files
 .vs/
-*.vsidx
+*.vscode/
+*.suo
+*.user
+*.sln.docstates
+
+# Ignore project-specific files and folders
+/App_Data/
+/wwwroot/
+
+# Ignore NuGet packages folder
+/packages/
+
+# Ignore .NET Core artifacts
+*.dll
+*.exe
+*.pdb
+*.log
+*.config
+*.json
+*.htm
+*.html
+
+# Ignore user-specific files
+*.userprefs
+*.lock
+
+# Ignore .NET artifacts
+[Oo]bj/
+[Bb]in/
+
+# Ignore node_modules folder if using Node.js
+node_modules/
+
+# Ignore temporary files
+*.bak
+*.cache
+*.tmp
+
+# Ignore Visual Studio Code directory
+.vscode/
+
+# Ignore JetBrains Rider specific files
+.idea/
+
+# Ignore macOS file system attributes
+.DS_Store
+
+# Ignore TypeScript compilation output
+*.js
+*.js.map
+
+# Ignore Razor precompiled views
+*.cshtml.g.cs
