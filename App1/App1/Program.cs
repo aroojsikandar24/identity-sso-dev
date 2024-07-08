@@ -1,10 +1,12 @@
-using Microsoft.AspNetCore.Authentication;
+using App1.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 var _configuration = builder.Configuration;
+
+builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 
 builder.Services.AddHttpClient();
 

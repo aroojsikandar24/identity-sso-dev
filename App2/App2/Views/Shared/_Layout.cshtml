@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -19,16 +22,18 @@
     <script>
         function silentSignIn() {
 
+            var applicationUrl = '@Configuration["ApplicationUrl"]';
+            var identityServerUrl = '@Configuration["IdentityServerApplicationUrl"]';
+
             var isUserLoggedIn = '@User.Identity.IsAuthenticated';
             if (isUserLoggedIn == 'False') {
                 var iframe = document.createElement('iframe');
                 iframe.id = 'silent-login-frame';
                 iframe.style.display = "none";
-                iframe.src = 'https://localhost:5002/Home/Login';
+                iframe.src = applicationUrl + "/Home/Login";
 
                 iframe.onload = function () {
-                    debugger
-                    if (iframe.contentWindow.location.href !== undefined && iframe.contentWindow.location.href == "https://localhost:5002/Dashboard") {
+                    if (iframe.contentWindow.location.href !== undefined && iframe.contentWindow.location.href == applicationUrl + "/Dashboard") {
                         location.reload();
                     }
                 };
@@ -36,24 +41,7 @@
             }
         }
 
-        function silentSignOut() {
-            var iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.src = 'https://localhost:5000/connect/endsession?id_token_hint=' + idToken + '&post_logout_redirect_uri=https://localhost:@ViewData["Port"]/silent-check-sso.html';
-            document.body.appendChild(iframe);
-
-            window.addEventListener('message', function (event) {
-                if (event.origin === 'https://localhost:5000') {
-                    document.body.removeChild(iframe);
-                    if (event.data && event.data.startsWith('https://localhost:@ViewData["Port"]/silent-check-sso.html')) {
-                        location.reload();
-                    }
-                }
-            });
-        }
-
         document.addEventListener('DOMContentLoaded', function () {
-            debugger;
             silentSignIn();
         });
 
