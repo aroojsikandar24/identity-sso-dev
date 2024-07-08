@@ -16,3 +16,22 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.app-identity-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 10px;
+    width: 100%;
+    background-color: #f1bf1c;
+}
+
+.app-identity-badge {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    border-radius: 30px;
+    background-color: #2b2b2b;
+    color: #ffffff;
+    padding: 10px 20px;
+}
