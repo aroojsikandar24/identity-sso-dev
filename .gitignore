@@ -1,4 +1,59 @@
-**/**/.vs/
-**/**/.vs/
-**/**/obj/*
+# Ignore the bin and obj directories
+bin/
+obj/
 
+# Ignore Visual Studio files
+.vs/
+*.vscode/
+*.suo
+*.user
+*.sln.docstates
+
+# Ignore project-specific files and folders
+/App_Data/
+/wwwroot/
+
+# Ignore NuGet packages folder
+/packages/
+
+# Ignore .NET Core artifacts
+*.dll
+*.exe
+*.pdb
+*.log
+*.config
+*.json
+*.htm
+*.html
+
+# Ignore user-specific files
+*.userprefs
+*.lock
+
+# Ignore .NET artifacts
+[Oo]bj/
+[Bb]in/
+
+# Ignore node_modules folder if using Node.js
+node_modules/
+
+# Ignore temporary files
+*.bak
+*.cache
+*.tmp
+
+# Ignore Visual Studio Code directory
+.vscode/
+
+# Ignore JetBrains Rider specific files
+.idea/
+
+# Ignore macOS file system attributes
+.DS_Store
+
+# Ignore TypeScript compilation output
+*.js
+*.js.map
+
+# Ignore Razor precompiled views
+*.cshtml.g.cs

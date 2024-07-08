@@ -1,0 +1,24 @@
+﻿@model dynamic
+@{
+    ViewData["Title"] = "User Information";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 mt-5">
+            <h3>@ViewData["Title"]</h3>
+            <div class="card">
+                <div class="card-body">
+                    <p><strong>Name:</strong> @Model.Name</p>
+                    <h4>Claims:</h4>
+                    <ul>
+                        @foreach (var claim in Model.Claims)
+                        {
+                            <li><strong>@claim.Type:</strong> @claim.Value</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
