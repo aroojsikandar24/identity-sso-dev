@@ -7,7 +7,7 @@
         <div class="col-md-12 mt-5 text-center">
             @if (User.Identity.IsAuthenticated)
             {
-                <p class="mb-4">Welcome, <strong>@User.Identity.Name</strong>!</p>
+                <h1 class="mb-4">Welcome, <strong>@User.Identity.Name</strong>! 👋🏼</h1>
                 <button class="btn btn-primary mr-2" onclick="location.href='/Home/Logout'">Logout</button>
                 <button class="btn btn-success" onclick="location.href='/Dashboard/UserInfo'">Get User Info</button>
             }
