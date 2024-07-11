@@ -1,4 +1,5 @@
 ﻿using Duende.IdentityServer.Models;
+using IdentityModel;
 
 public static class Config
 {
@@ -13,10 +14,10 @@ public static class Config
                 AllowedGrantTypes = GrantTypes.Code,
                 RedirectUris = { "https://localhost:5001/signin-oidc" },
                 PostLogoutRedirectUris = { "https://localhost:5001"},
-                AllowedScopes = { "openid", "profile", "api1" },
+                AllowedScopes = { "openid", "profile", "app1", "roles"},
                 RequirePkce = true,
                 AllowOfflineAccess = true,
-                AllowAccessTokensViaBrowser = true
+                AllowAccessTokensViaBrowser = true,
             },
             new Client
             {
@@ -25,7 +26,7 @@ public static class Config
                 AllowedGrantTypes = GrantTypes.Code,
                 RedirectUris = { "https://localhost:5002/signin-oidc" },
                 PostLogoutRedirectUris = { "https://localhost:5002" },
-                AllowedScopes = { "openid", "profile", "api1" },
+                AllowedScopes = { "openid", "profile", "app2" },
                 RequirePkce = true,
                 AllowOfflineAccess = true,
                 AllowAccessTokensViaBrowser = true
@@ -37,7 +38,8 @@ public static class Config
     {
         return new List<ApiScope>
         {
-            new ApiScope("api1", "My API")
+            new ApiScope("app1", "My API 1", new[] { JwtClaimTypes.Role }),
+            new ApiScope("app2", "My API 2", new[] { JwtClaimTypes.Role }),
         };
     }
 
@@ -46,7 +48,9 @@ public static class Config
         return new List<IdentityResource>
         {
             new IdentityResources.OpenId(),
-            new IdentityResources.Profile()
+            new IdentityResources.Profile(),
+            new IdentityResource("roles", new[] { JwtClaimTypes.Role })
         };
     }
+
 }

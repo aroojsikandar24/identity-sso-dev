@@ -1,6 +1,10 @@
+using IdentityServer.Data;
 using IdentityServer.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,8 +21,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     options.Password.RequireUppercase = false;
     options.User.RequireUniqueEmail = true;
 })
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders();
+.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultTokenProviders();
 
 builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
    options.TokenLifespan = TimeSpan.FromHours(2));
@@ -29,6 +33,17 @@ builder.Services.AddIdentityServer()
     .AddInMemoryIdentityResources(Config.GetIdentityResources())
     .AddAspNetIdentity<ApplicationUser>()
     .AddDeveloperSigningCredential();
+
+/*builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("admin"));
+    options.AddPolicy("RequireShopperRole", policy => policy.RequireRole("shopper"));
+
+    options.AddPolicy("RequireAdminOrShopperRole", policy =>
+    {
+        policy.RequireRole("admin", "shopper");
+    });
+});*/
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -48,7 +63,32 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(options =>
+        {
+            options.Authority = "https://localhost:5000";
+            options.Audience = "app1";
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidIssuer = "https://localhost:5000",
+                ValidateAudience = true,
+                ValidAudience = "app1",
+                ValidateLifetime = true
+            };
+        });
+
+
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await DataSeeder.SeedRolesAsync(services);
+    await DataSeeder.SeedUsersAsync(services);
+    await DataSeeder.SeedOrdersAsync(services);
+    await DataSeeder.SeedInventoryAsync(services);
+}
 
 app.UseCors("AllowAllOrigins");
 
@@ -63,3 +103,5 @@ app.UseAuthorization();
 app.MapDefaultControllerRoute();
 
 app.Run();
+
+
