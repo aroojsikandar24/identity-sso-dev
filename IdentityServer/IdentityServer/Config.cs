@@ -14,7 +14,7 @@ public static class Config
                 AllowedGrantTypes = GrantTypes.Code,
                 RedirectUris = { "https://localhost:5001/signin-oidc" },
                 PostLogoutRedirectUris = { "https://localhost:5001"},
-                AllowedScopes = { "openid", "profile", "app1", "roles"},
+                AllowedScopes = { "openid", "profile", "myapp", "roles"},
                 RequirePkce = true,
                 AllowOfflineAccess = true,
                 AllowAccessTokensViaBrowser = true,
@@ -26,7 +26,7 @@ public static class Config
                 AllowedGrantTypes = GrantTypes.Code,
                 RedirectUris = { "https://localhost:5002/signin-oidc" },
                 PostLogoutRedirectUris = { "https://localhost:5002" },
-                AllowedScopes = { "openid", "profile", "app2" },
+                AllowedScopes = { "openid", "profile", "myapp", "roles"},
                 RequirePkce = true,
                 AllowOfflineAccess = true,
                 AllowAccessTokensViaBrowser = true
@@ -38,8 +38,7 @@ public static class Config
     {
         return new List<ApiScope>
         {
-            new ApiScope("app1", "My API 1", new[] { JwtClaimTypes.Role }),
-            new ApiScope("app2", "My API 2", new[] { JwtClaimTypes.Role }),
+            new ApiScope("myapp", "My API", new[] { JwtClaimTypes.Role }),
         };
     }
 

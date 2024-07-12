@@ -31,7 +31,7 @@ builder.Services.AddAuthentication(options =>
     options.SaveTokens = true;
     options.Scope.Add("openid");
     options.Scope.Add("profile");
-    options.Scope.Add("app1");
+    options.Scope.Add("myapp");
     options.Scope.Add("roles");
     options.ClaimActions.MapJsonKey("role", "role");
     options.ClaimActions.Remove("aud");

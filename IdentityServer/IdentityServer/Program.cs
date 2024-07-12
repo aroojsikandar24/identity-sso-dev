@@ -67,13 +67,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
         {
             options.Authority = "https://localhost:5000";
-            options.Audience = "app1";
+            options.Audience = "myapp";
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
                 ValidIssuer = "https://localhost:5000",
                 ValidateAudience = true,
-                ValidAudience = "app1",
+                ValidAudience = "myapp",
                 ValidateLifetime = true
             };
         });

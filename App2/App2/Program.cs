@@ -1,11 +1,18 @@
+using IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
 var _configuration = builder.Configuration;
 
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient();
 
 builder.Services.AddAuthentication(options =>
@@ -23,13 +30,26 @@ builder.Services.AddAuthentication(options =>
     options.SaveTokens = true;
     options.Scope.Add("openid");
     options.Scope.Add("profile");
-    options.Scope.Add("api1");
+    options.Scope.Add("myapp");
+    options.Scope.Add("roles");
+    options.ClaimActions.MapJsonKey("role", "role");
+    options.ClaimActions.Remove("aud");
     options.GetClaimsFromUserInfoEndpoint = true;
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        NameClaimType = "name",
-        RoleClaimType = "role"
+        NameClaimType = JwtClaimTypes.Name,
+        RoleClaimType = JwtClaimTypes.Role
     };
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("admin"));
+    options.AddPolicy("RequireShopperRole", policy => policy.RequireRole("shopper"));
+    options.AddPolicy("RequireAdminOrShopperRole", policy =>
+    {
+        policy.RequireRole("admin", "shopper");
+    });
 });
 
 builder.Services.AddControllersWithViews();
@@ -58,6 +78,7 @@ app.UseEndpoints(endpoints =>
         name: "dashboard",
         pattern: "dashboard",
         defaults: new { controller = "Dashboard", action = "Index" });
+
 });
 
 app.Run();
