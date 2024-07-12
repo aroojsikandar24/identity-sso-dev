@@ -1,0 +1,40 @@
+﻿@model List<Order>
+
+@{
+    ViewData["Title"] = "User Orders";
+}
+
+<div class="mt-5">
+    <div class="col-md-12 mt-5 mb-4">
+        <button class="btn btn-primary mr-2" onclick="location.href='/Dashboard/'">Back</button>
+    </div>
+
+    <h2>User Orders</h2>
+
+    @if (Model == null || !Model.Any())
+    {
+        <p>No orders found.</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in Model)
+                {
+                    <tr>
+                        <td>@order.Id</td>
+                        <td>@order.ProductName</td>
+                        <td>@order.Quantity</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

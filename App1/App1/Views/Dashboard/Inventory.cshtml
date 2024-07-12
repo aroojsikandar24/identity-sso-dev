@@ -1,0 +1,40 @@
+﻿@model List<Inventory>
+
+@{
+    ViewData["Title"] = "Inventory";
+}
+
+<div class="mt-5">
+    <div class="col-md-12 mt-5 mb-4">
+        <button class="btn btn-primary mr-2" onclick="location.href='/Dashboard/'">Back</button>
+    </div>
+
+    <h2>Inventory</h2>
+
+    @if (Model == null || !Model.Any())
+    {
+        <p>No inventory found.</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Inventory ID</th>
+                    <th>Product Name</th>
+                    <th>Quantity In Warehouse</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var inventory in Model)
+                {
+                    <tr>
+                        <td>@inventory.Id</td>
+                        <td>@inventory.ProductName</td>
+                        <td>@inventory.QuantityInWarehouse</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

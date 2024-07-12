@@ -1,25 +1,16 @@
-﻿using IdentityModel.Client;
-using Microsoft.AspNetCore.Authentication;
+﻿using App1.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net.Http.Headers;
-using static System.Net.WebRequestMethods;
+using Newtonsoft.Json;
+using System.Net;
 
 [Authorize]
 public class DashboardController : Controller
 {
-    private readonly IHttpClientFactory _httpClientFactory;
     private readonly IConfiguration _configuration;
-    private readonly HttpClient _httpClient;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    public DashboardController(IHttpClientFactory httpClientFactory, IConfiguration configuration, HttpClient httpClient, IHttpContextAccessor httpContextAccessor)
+    public DashboardController(IConfiguration configuration)
     {
-        _httpClientFactory = httpClientFactory;
         _configuration = configuration;
-        _httpClient = httpClient;
-        _httpContextAccessor = httpContextAccessor;
     }
 
     public IActionResult Index()
@@ -43,40 +34,69 @@ public class DashboardController : Controller
     }
 
     [Authorize(Policy = "RequireAdminRole")]
-    public async Task<IActionResult> GetInventory()
+    public async Task<IActionResult> Inventory()
     {
+        var redirectUrl = $"{_configuration["IdentityServerApplicationUrl"]}/api/inventory";
 
-        var redirectUrl = " https://localhost:5000/api/inventory";
-        return Redirect(redirectUrl);
+        using (var handler = new HttpClientHandler())
+        {
+            if (Request.Cookies.Any())
+            {
+                handler.CookieContainer = new CookieContainer();
+                foreach (var cookie in Request.Cookies)
+                {
+                    handler.CookieContainer.Add(new Uri(redirectUrl), new Cookie(cookie.Key, cookie.Value));
+                }
+            }
 
-        /*  var client = _httpClientFactory.CreateClient();
-          var accessToken = await HttpContext.GetTokenAsync("access_token");
-          if (string.IsNullOrEmpty(accessToken))
-          {
-              return Unauthorized("Access token is missing.");
-          }
-
-          client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-
-          var response = await client.GetAsync("https://localhost:5000/api/inventory");
-
-          if (response.IsSuccessStatusCode)
-          {
-              var inventoryData = await response.Content.ReadAsStringAsync();
-              return Content(inventoryData, "application/json");
-          }
-          else
-          {
-              var errorContent = await response.Content.ReadAsStringAsync();
-              return StatusCode((int)response.StatusCode, errorContent);
-          }*/
+            using (var client = new HttpClient(handler))
+            {
+                var response = await client.GetAsync(redirectUrl);
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var Inventory = JsonConvert.DeserializeObject<List<Inventory>>(content);
+                    return View(Inventory);
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, "Error fetching inventory data");
+                }
+            }
+        }
     }
 
     [Authorize(Policy = "RequireAdminOrShopperRole")]
-    public async Task<IActionResult> GetOrders()
+    public async Task<IActionResult> Orders()
     {
-        var redirectUrl = " https://localhost:5000/api/order";
-        return Redirect(redirectUrl);
+        var redirectUrl = $"{_configuration["IdentityServerApplicationUrl"]}/api/order";
+
+        using (var handler = new HttpClientHandler())
+        {
+            if (Request.Cookies.Any())
+            {
+                handler.CookieContainer = new CookieContainer();
+                foreach (var cookie in Request.Cookies)
+                {
+                    handler.CookieContainer.Add(new Uri(redirectUrl), new Cookie(cookie.Key, cookie.Value));
+                }
+            }
+
+            using (var client = new HttpClient(handler))
+            {
+                var response = await client.GetAsync(redirectUrl);
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var orders = JsonConvert.DeserializeObject<List<Order>>(content);
+                    return View(orders);
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, "Error fetching orders data");
+                }
+            }
+        }
 
 
         /*    var accessToken = await HttpContext.GetTokenAsync("access_token");
@@ -111,11 +131,43 @@ public class DashboardController : Controller
 
     }
 
-/*    [Authorize(Policy = "RequireAdminOrShopperRole")]
-    public async Task<IActionResult> GetOrdersByUserId()
+    [Authorize(Policy = "RequireAdminOrShopperRole")]
+    public async Task<IActionResult> OrdersByUserId()
     {
-        var userId = User.Identity.id;
-        var redirectUrl = $"http://localhost:5000/api/order/{userId}";
-        return Redirect(redirectUrl);
-    }*/
+        var userId = User.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized("User ID is missing.");
+        }
+
+        var redirectUrl = $"{_configuration["IdentityServerApplicationUrl"]}/api/order/{userId}";
+
+        using (var handler = new HttpClientHandler())
+        {
+            if (Request.Cookies.Any())
+            {
+                handler.CookieContainer = new CookieContainer();
+                foreach (var cookie in Request.Cookies)
+                {
+                    handler.CookieContainer.Add(new Uri(redirectUrl), new Cookie(cookie.Key, cookie.Value));
+                }
+            }
+
+            using (var client = new HttpClient(handler))
+            {
+                var response = await client.GetAsync(redirectUrl);
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var OrdersByUserId = JsonConvert.DeserializeObject<List<Order>>(content);
+                    return View(OrdersByUserId);
+                }
+                else
+                {
+                    return StatusCode((int)response.StatusCode, "Error fetching orders data");
+                }
+            }
+        }
+    }
 }
