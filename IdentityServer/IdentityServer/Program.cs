@@ -63,22 +63,6 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-        .AddJwtBearer(options =>
-        {
-            options.Authority = "https://localhost:5000";
-            options.Audience = "myapp";
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidIssuer = "https://localhost:5000",
-                ValidateAudience = true,
-                ValidAudience = "myapp",
-                ValidateLifetime = true
-            };
-        });
-
-
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
